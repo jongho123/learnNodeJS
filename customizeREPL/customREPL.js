@@ -5,5 +5,10 @@ var repl = require("repl");
 // repl.start([prompt], [stream], [eval], [useGlobal], [ignoreUndefined]);
 
 // null 로 설정하면 기본값으로 설정 됨.
-repl.start("node via stdin> ", null, null, null, true);
+var context = repl.start(">>", null, null, null, true).context;
+
+// 모듈들을 사전에 로드
+context.http = require('http');
+context.util = require('util');
+context.os = require('os');
 
