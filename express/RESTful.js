@@ -5,13 +5,15 @@ var express = require('express'),
 var favicon = require('serve-favicon'),
     serveStatic = require('serve-static'),
     logger = require('morgan'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    methodOverride = require('method-override');
 
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
-app.use(serveStatic('static', { index: 'public.html' }));
+app.use(serveStatic('static', { index: 'public2.html' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(methodOverride());
 
 var widgets = [
   { id : 1,
@@ -20,6 +22,20 @@ var widgets = [
     descr : 'A widget beyond price'
   }
 ]
+
+// /widgets/에 대한 index
+app.get('/widgets', function(req, res) {
+  res.send(widgets);
+});
+
+// 위젯 조회
+app.get('/widgets/:id', function(req, res) {
+  var indx = parseInt(req.params.id) - 1;
+  if (!widgets[indx])
+    res.send('Widget ' + req.body.widgetname + ' added with id ' + indx);
+  else
+    res.send(widgets[indx]);
+});
 
 // 위젯 추가
 app.post('/widgets/add', function(req, res) {
@@ -33,13 +49,24 @@ app.post('/widgets/add', function(req, res) {
   res.send('Widget ' + req.body.widgetname + ' added with id ' + indx);
 });
 
-// 위젯 조회
-app.get('/widgets/:id', function(req, res) {
+// 위젯 삭제
+app.delete('/widgets/:id/delete', function(req, res) {
+  var indx = req.params.id - 1;
+  delete widgets[indx];
+  console.log('deleted ' + req.params.id);
+  res.send('deleted ' + req.params.id);
+});
+
+// 위젯 업데이트/편집
+app.put('/widgets/:id/update', function(req, res) {
   var indx = parseInt(req.params.id) - 1;
-  if (!widgets[indx])
-    res.send('Widget ' + req.body.widgetname + ' added with id ' + indx);
-  else
-    res.send(widgets[indx]);
+  widgets[indx] = 
+    { id : indx,
+      name : req.body.widgetname,
+      price : parseFloat(req.body.widgetprice),
+      descr : req.body.widgetdesc };
+  console.log(widgets[indx]);
+  res.send('Updated ' + req.params.id);
 });
 
 // catch 404 and forward to error handler
