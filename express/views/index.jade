@@ -1,5 +1,14 @@
 extends layout
 
-block content
-  h1= title
-  p Welcome to #{title}
+block content table
+  caption Widgets
+    if widgets.length
+      tr
+        th ID
+        th Name
+        th Price
+        th Description
+        th
+        th
+      each widget in widgets
+        include row
