@@ -10,8 +10,8 @@ var favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
     methodOverride = require('method-override');
 
-app.set('views', __dirname + '/views_ejs');
-app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
