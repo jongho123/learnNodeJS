@@ -10,8 +10,8 @@ var favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
     methodOverride = require('method-override');
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+app.set('views', __dirname + '/views_ejs');
+app.set('view engine', 'ejs');
 
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
@@ -50,6 +50,7 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+      title: 'error',
       message: err.message,
       error: err
     });

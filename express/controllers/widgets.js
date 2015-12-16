@@ -8,12 +8,13 @@ var widgets = [
 
 // 위젯 색인 목록 index, GET method
 exports.index = function(req, res) {
-  res.send(widgets);
+  res.render('widgets', {title: 'Widgets', widgets: widgets});
 };
 
 // 새 위젯 폼을 표시, GET method
 exports.new = function(req, res) {
-  res.send('displaying new widget form');
+  var filePath = require('path').normalize(__dirname + '/../static/new.html');
+  res.sendFile(filePath);
 };
 
 // 새 위젯 생성(추가), POST method
@@ -24,9 +25,8 @@ exports.create = function(req, res) {
       name : req.body.widgetname,
       price : parseFloat(req.body.widgetprice) 
     };
-  console.log('added ' + indx);
   console.log(widgets[indx-1]);
-  res.send('Widget ' + req.body.widgetname + ' added with id ' + indx);
+  res.render('added', {title: 'Widget Added', widget: widgets[indx-1]});
 };
 
 // 특정 위젯 조회, GET method
@@ -35,7 +35,7 @@ exports.show = function(req, res) {
   if (!widgets[indx]) 
     res.send('There is no widget with id of ' + req.params.id);
   else
-    res.send(widgets[indx]); 
+    res.render('show', {title: 'Show Widget', widget:widgets[indx]}); 
 };
 
 // 특정 위젯 삭제, DELETE method
@@ -48,7 +48,8 @@ exports.destroy = function(req, res) {
 
 // 편집 폼 표시, GET method
 exports.edit = function(req, res) {
-  res.send('displaying edit form');
+  var indx = parseInt(req.params.id) - 1;
+  res.render('edit', {title: 'Edit Widget', widget: widgets[indx]});
 };
 
 // 위젯업데이트, PUT method
@@ -60,5 +61,5 @@ exports.update = function(req, res) {
       price : parseFloat(req.body.widgetprice)
     };
   console.log(widgets[indx]);
-  res.send('Updated ' + req.params.id);
+  res.render('added', {title: 'Widget Edited', widget: widgets[indx]});
 }; 
