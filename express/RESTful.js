@@ -2,6 +2,7 @@ var express = require('express'),
     routes = require('./routes'),
     map = require('./maproutecontroller'),
     http = require('http'),
+    stylus = require('stylus'),
     app = express();
 
 var favicon = require('serve-favicon'),
@@ -15,6 +16,10 @@ app.set('view engine', 'jade');
 
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
+app.use(stylus.middleware({
+  src: __dirname + '/views',
+  dest: __dirname + '/static'
+}));
 app.use(serveStatic('static'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
