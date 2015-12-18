@@ -19,8 +19,8 @@ function makeCallbackFunc(member) {
     client.hgetall(member, function(err, obj) {
       callback(err, obj);
     }); 
-  };
-});
+  }
+}
 
 http.createServer( function(req, res) {
   // 먼저 아이콘 요청을 필터링
