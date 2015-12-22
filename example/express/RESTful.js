@@ -1,6 +1,7 @@
 var express = require('express'),
     routes = require('./routes'),
     map = require('./maproutecontroller'),
+    stats = require('./stats'),
     http = require('http'),
     stylus = require('stylus'),
     app = express();
@@ -14,6 +15,8 @@ var favicon = require('serve-favicon'),
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
+// 미들웨어 추가
+app.use(stats());
 app.use(favicon('favicon.ico'));
 app.use(logger('dev'));
 app.use(stylus.middleware({
@@ -33,6 +36,8 @@ app.use(methodOverride(function(req, res) {
 }));
 
 app.get('/', routes.index);
+app.get('/stats', routes.stats);
+
 var prefixes = ['widgets'];
 
 // 컨트롤러에 라우팅 경로를 매팅
