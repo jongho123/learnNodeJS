@@ -1,10 +1,18 @@
 var express = require('express'),
-    routes = require('./routes'),
+    main = require('./main'),
     map = require('./maproutecontroller'),
     stats = require('./stats'),
     http = require('http'),
     stylus = require('stylus'),
+    mongoose = require('mongoose'),
     app = express();
+
+// MongoDB
+mongoose.connect('mongodb://localhost/WidgetDB');
+
+mongoose.connection.on('open', function() {
+  console.log('Connected to Mongoose');
+});
 
 var favicon = require('serve-favicon'),
     serveStatic = require('serve-static'),
@@ -35,8 +43,8 @@ app.use(methodOverride(function(req, res) {
   }
 }));
 
-app.get('/', routes.index);
-app.get('/stats', routes.stats);
+app.get('/', main.index);
+app.get('/stats', main.stats);
 
 var prefixes = ['widgets'];
 

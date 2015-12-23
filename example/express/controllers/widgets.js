@@ -1,65 +1,95 @@
-
-var widgets = [
-  { id : 1,
-    name : 'My Special Widget',
-    price : 100.00
-  }
-]
+var Widget = require('../models/widget.js');
 
 // 위젯 색인 목록 index, GET method
 exports.index = function(req, res) {
-  res.render('widgets', {title: 'Widgets', widgets: widgets});
+  Widget.find({}, function(err, docs) {
+    console.log(docs);
+    res.render('widgets/index', {title: 'Widgets', widgets: docs});
+  });
 };
 
 // 새 위젯 폼을 표시, GET method
 exports.new = function(req, res) {
-  var filePath = require('path').normalize(__dirname + '/../static/new.html');
+  var filePath = require('path').normalize(__dirname + '/../static/widgets/new.html');
   res.sendFile(filePath);
 };
 
 // 새 위젯 생성(추가), POST method
 exports.create = function(req, res) {
-  var indx = widgets.length + 1;
-  widgets[widgets.length] =
-    { id : indx,
-      name : req.body.widgetname,
-      price : parseFloat(req.body.widgetprice) 
-    };
-  console.log(widgets[indx-1]);
-  res.render('added', {title: 'Widget Added', widget: widgets[indx-1]});
+  widget = { 
+    sn : req.body.widgetsn,
+    name : req.body.widgetname,
+    price : parseFloat(req.body.widgetprice),
+    desc: req.body.widgetdesc
+  };
+
+  var widgetObj = new Widget(widget);
+
+  widgetObj.save(function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log(data);
+      res.render('widgets/added', {title: 'Widget Added', widget: widget});
+    }
+  });
 };
 
 // 특정 위젯 조회, GET method
 exports.show = function(req, res) {
-  var indx = parseInt(req.params.id) - 1;
-  if (!widgets[indx]) 
-    res.send('There is no widget with id of ' + req.params.id);
-  else
-    res.render('show', {title: 'Show Widget', widget:widgets[indx]}); 
+  var sn = req.params.sn; 
+
+  Widget.findOne({sn: sn}, function(err, doc) {
+    if (err) 
+      res.send('There is no widget with sn of ' + sn);
+    else
+      res.render('widgets/show', {title: 'Show Widget', widget: doc}); 
+  });
+  
 };
 
 // 특정 위젯 삭제, DELETE method
 exports.destroy = function(req, res) {
-  var indx = req.params.id - 1;
-  delete widgets[indx];
-  console.log('deleted ' + req.params.id);
-  res.send('deleted ' + req.params.id);
+  var sn = req.params.sn;
+
+  Widget.remove({sn: sn}, function(err) {
+    if (err) {
+      res.send('There is no widget with sn of ' + sn);
+    } else {
+      console.log('deleted ' + sn);
+      res.send('deleted ' + sn);
+    }
+  });  
 };
 
 // 편집 폼 표시, GET method
 exports.edit = function(req, res) {
-  var indx = parseInt(req.params.id) - 1;
-  res.render('edit', {title: 'Edit Widget', widget: widgets[indx]});
+  var sn = req.params.sn;
+  Widget.findOne({sn: sn}, function(err, doc) {
+    console.log(doc);
+
+    if (err) 
+      res.send('There is no widget with sn of ' + sn);
+    else
+      res.render('widgets/edit', {title: 'Edit Widget', widget: doc});
+  });
 };
 
 // 위젯업데이트, PUT method
 exports.update = function(req, res) {
-  var indx = parseInt(req.params.id) - 1;
-  widgets[indx] = 
-    { id : req.params.id,
-      name : req.body.widgetname,
-      price : parseFloat(req.body.widgetprice)
-    };
-  console.log(widgets[indx]);
-  res.render('added', {title: 'Widget Edited', widget: widgets[indx]});
+  var sn = req.params.sn;
+
+  var widget = {
+    sn: req.body.widgetsn,
+    name: req.body.widgetname,
+    price: parseFloat(req.body.widgetprice),
+    desc: req.body.widgetdesc
+  };
+
+  Widget.update({sn: sn}, widget, function(err) {
+    if (err)
+      res.send('Problem occured with update' + err);
+    else
+      res.render('widgets/added', {title: 'Widget Edited', widget: widget});
+  });
 }; 

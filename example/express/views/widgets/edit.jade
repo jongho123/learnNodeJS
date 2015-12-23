@@ -3,8 +3,15 @@ extends layout
 block content
   h1 Edit #{widget.name}
   form(method="POST"
-       action="/widgets/#{widget.id}"
+       action="/widgets/#{widget.sn}"
        enctype="application/x-www-form-urlencoded")
+    p Widget Serial Number:
+      input(type="text"
+            name="widgetsn"
+            id="widgetsn"
+            size="25"
+            value="#{widget.sn}"
+            required)
     p Widget Name:
       input(type="text"
             name="widgetname"
