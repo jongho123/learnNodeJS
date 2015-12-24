@@ -34,7 +34,7 @@ module.exports.createGraphic = function(res) {
     ctx.restore();
   }
 
-  var stream = canvas.createPNGStream();
+  var stream = canvas.pngStream();
   stream.on('data', function(chunk) {
     res.write(chunk);
   });
