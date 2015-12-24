@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title> Upload PDF </title>
+  <script>
+    window.onload=function() {
+      document.getElementById('upload').onsubmit=function() {
+        document.getElementById('submit').disabled=true;
+      };
+    }
+  </script>
+</head>
+
+<body>
+<form id="upload" method="POST" action="/" enctype="multipart/form-data">
+  <p> <label for="username"> User Name: </label>
+    <input type="text" id="username" name="username" size="20" required /> </p>
+
+  <p> <label for="imagefile"> Files: </label>
+    <input type="file" id="imagefile" name="imagefile" size="20" required /> </p>
+
+  <p> <input type="submit" name="submit" id="submit" value="Submit"/> </p>
+</form>
+</body>
