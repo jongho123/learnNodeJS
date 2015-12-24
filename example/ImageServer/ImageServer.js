@@ -9,6 +9,8 @@ var serveStatic = require('serve-static'),
 var spawn = require('child_process').spawn,
     fs = require('fs');
 
+var canvas = require('./canvas');
+
 function processImage(res, path) {
   // 사진을 가져옴
   var photo = __dirname + '/' + path;
@@ -50,7 +52,9 @@ function processImage(res, path) {
 }
 
 app.use(serveStatic('static', {index: 'upload.html'}));
-
+app.get('/graphic', function(req, res) {
+  canvas.createGraphic(res);
+});
 app.post('/', upload.single('imagefile'), function(req, res) {
   if(req.file && req.file.mimetype === 'image/jpeg') {
     processImage(res, req.file.path);
