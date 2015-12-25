@@ -2,8 +2,6 @@ var app = require('http').createServer(handler),
     io = require('socket.io').listen(app),
     fs = require('fs');
 
-var counter;
-
 app.listen(19918);
 
 function handler(req, res) {
@@ -19,10 +17,12 @@ function handler(req, res) {
 }
 
 io.sockets.on('connection', function(socket) {
+  socket.counter = 1;
+
   socket.emit('news', {news: 'world'});
   socket.on('echo', function(data) {
-    if (counter <= 50) {
-      data.back += ' ' + counter++;
+    if (socket.counter <= 50) {
+      data.back += ' ' + socket.counter++;
       socket.emit('news', {news: data.back});
     }
   });
