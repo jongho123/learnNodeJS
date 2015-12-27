@@ -1,0 +1,6 @@
+openssl genrsa -des3 -out site.key 1024
+openssl req -new -key site.key -out site.csr
+openssl rsa -in site.key.org -out site.key
+sudo chown root.root site.key
+sudo chmod u=rw site.key
+sudo openssl x509 -req -days 365 -in site.csr -signkey site.key -out final.crt
